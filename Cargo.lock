@@ -6777,9 +6777,11 @@ name = "uv-preview"
 version = "0.0.29"
 dependencies = [
  "enumflags2",
+ "insta",
  "itertools 0.14.0",
  "schemars",
  "serde",
+ "serde_json",
  "thiserror 2.0.18",
  "uv-preview",
  "uv-warnings",

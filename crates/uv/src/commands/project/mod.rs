@@ -956,33 +956,23 @@ impl ProjectInterpreter {
     /// Discover the interpreter to use in the current [`Workspace`].
     pub(crate) async fn discover(
         workspace: &Workspace,
-        project_dir: &Path,
+        workspace_python: &WorkspacePython,
         groups: &DependencyGroupsWithDefaults,
-        python_request: Option<PythonRequest>,
         client_builder: &BaseClientBuilder<'_>,
         python_preference: PythonPreference,
         python_downloads: PythonDownloads,
         install_mirrors: &PythonInstallMirrors,
         keep_incompatible: bool,
-        no_config: bool,
         active: Option<bool>,
         cache: &Cache,
         printer: Printer,
         preview: Preview,
     ) -> Result<Self, ProjectError> {
-        // Resolve the Python request and requirement for the workspace.
         let WorkspacePython {
-            source,
-            python_request,
-            requires_python,
-        } = WorkspacePython::from_request(
-            python_request,
-            Some(workspace),
-            groups,
-            project_dir,
-            no_config,
-        )
-        .await?;
+            ref source,
+            ref python_request,
+            ref requires_python,
+        } = *workspace_python;
 
         let venv_path = workspace.venv(active);
 
@@ -1137,7 +1127,7 @@ impl ProjectInterpreter {
                 Some(workspace),
                 groups,
                 requires_python,
-                &source,
+                source,
             )?;
         }
 
@@ -1459,17 +1449,24 @@ impl ProjectEnvironment {
                 .as_ref()
                 .is_none_or(|request| !request.includes_patch());
 
+        let workspace_python = WorkspacePython::from_request(
+            python,
+            Some(workspace),
+            groups,
+            workspace.install_path().as_ref(),
+            no_config,
+        )
+        .await?;
+
         match ProjectInterpreter::discover(
             workspace,
-            workspace.install_path().as_ref(),
+            &workspace_python,
             groups,
-            python,
             client_builder,
             python_preference,
             python_downloads,
             install_mirrors,
             no_sync,
-            no_config,
             active,
             cache,
             printer,

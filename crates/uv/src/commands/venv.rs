@@ -204,7 +204,7 @@ pub(crate) async fn venv(
     if centralized {
         writeln!(
             printer.stderr(),
-            "Creating virtual environment {}in centralised location",
+            "Creating virtual environment {}in the centralised store",
             if seed { "with seed packages " } else { "" },
         )?;
     } else {

@@ -268,7 +268,7 @@ impl PythonEnvironment {
         Self(Arc::new(inner))
     }
 
-    /// Returns `true` if this environment is stored in a centralized location.
+    /// Returns `true` if this environment is stored in the centralised environment store.
     pub fn centralized(&self) -> bool {
         self.0.centralized
     }

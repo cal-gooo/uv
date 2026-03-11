@@ -15930,7 +15930,7 @@ fn sync_centralized_env() -> Result<()> {
 
     ----- stderr -----
     Using CPython 3.12.[X] interpreter at: [PYTHON-3.12]
-    Creating virtual environment in centralised location
+    Creating virtual environment in the centralised store
     Resolved 2 packages in [TIME]
     Prepared 1 package in [TIME]
     Installed 1 package in [TIME]
@@ -16107,7 +16107,7 @@ fn sync_centralized_env_no_collision() -> Result<()> {
 
     ----- stderr -----
     Using CPython 3.12.[X] interpreter at: [PYTHON-3.12]
-    Creating virtual environment in centralised location
+    Creating virtual environment in the centralised store
     Resolved 1 package in [TIME]
     Audited in [TIME]
     ");
@@ -16124,7 +16124,7 @@ fn sync_centralized_env_no_collision() -> Result<()> {
 
     ----- stderr -----
     Using CPython 3.12.[X] interpreter at: [PYTHON-3.12]
-    Creating virtual environment in centralised location
+    Creating virtual environment in the centralised store
     Resolved 1 package in [TIME]
     Audited in [TIME]
     ");
@@ -16174,7 +16174,7 @@ fn sync_centralized_env_virtual_workspace() -> Result<()> {
 
     ----- stderr -----
     Using CPython 3.12.[X] interpreter at: [PYTHON-3.12]
-    Creating virtual environment in centralised location
+    Creating virtual environment in the centralised store
     Resolved 2 packages in [TIME]
     Prepared 1 package in [TIME]
     Installed 1 package in [TIME]
@@ -16217,7 +16217,7 @@ fn sync_centralized_env_switch_python() -> Result<()> {
 
     ----- stderr -----
     Using CPython 3.12.[X] interpreter at: [PYTHON-3.12]
-    Creating virtual environment in centralised location
+    Creating virtual environment in the centralised store
     Resolved 1 package in [TIME]
     Audited in [TIME]
     ");
@@ -16236,7 +16236,7 @@ fn sync_centralized_env_switch_python() -> Result<()> {
 
     ----- stderr -----
     Using CPython 3.11.[X] interpreter at: [PYTHON-3.11]
-    Creating virtual environment in centralised location
+    Creating virtual environment in the centralised store
     Resolved 1 package in [TIME]
     Audited in [TIME]
     ");

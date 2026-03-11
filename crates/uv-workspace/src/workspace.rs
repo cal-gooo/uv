@@ -19,7 +19,9 @@ use uv_normalize::{DEV_DEPENDENCIES, GroupName, PackageName};
 use uv_pep440::VersionSpecifiers;
 use uv_pep508::{MarkerTree, VerbatimUrl};
 
+use uv_platform::{Arch, Libc, Os};
 use uv_pypi_types::{Conflicts, SupportedEnvironments, VerbatimParsedUrl};
+use uv_python::PythonRequest;
 use uv_static::EnvVars;
 use uv_warnings::warn_user_once;
 
@@ -1911,26 +1913,23 @@ impl VirtualProject {
 /// Compute the centralized environment root for a project.
 ///
 /// The environment is stored in the `Environments` cache bucket, keyed by a human-readable project
-/// name and a hash of the project's install path, platform, and Python interpreter (to avoid
-/// collisions between projects with the same name, across different platforms sharing a cache,
-/// and across different Python versions).
+/// name and a hash derived from the workspace install path and the Python request (to avoid
+/// collisions between projects with the same name, across different platforms sharing a cache, and
+/// across different Python versions).
 ///
 /// For example: `~/.cache/uv/environments-v2/my-project-a1b2c3d4/`
-///
-/// The platform and Python information come from the interpreter's marker environment
-/// (`platform_system`, `platform_machine`, `implementation_name`, and `python_version`).
 pub fn centralized_environment_root(
     workspace: &Workspace,
+    python_request: Option<&PythonRequest>,
     cache: &Cache,
-    interpreter: &uv_python::Interpreter,
 ) -> PathBuf {
-    let digest = cache_digest(&(
-        workspace.install_path(),
-        interpreter.markers().platform_system(),
-        interpreter.markers().platform_machine(),
-        interpreter.markers().implementation_name(),
-        interpreter.python_version().to_string(),
-    ));
+    let request_key = python_request
+        .map(PythonRequest::to_canonical_string)
+        .unwrap_or_else(|| PythonRequest::Default.to_canonical_string());
+    let os = Os::from_env().to_string();
+    let arch = Arch::from_env().to_string();
+    let libc = Libc::from_env().ok().map(|libc| libc.to_string());
+    let digest = cache_digest(&(workspace.install_path(), request_key, os, arch, libc));
     let name = workspace
         .pyproject_toml()
         .project

@@ -7372,6 +7372,7 @@ dependencies = [
  "uv-options-metadata",
  "uv-pep440",
  "uv-pep508",
+ "uv-platform",
  "uv-pypi-types",
  "uv-python",
  "uv-redacted",

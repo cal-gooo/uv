@@ -165,7 +165,11 @@ pub(crate) async fn venv(
 
     // Determine the path
     let path = if centralized {
-        centralized_environment_root(project.as_ref().unwrap().workspace(), cache, &interpreter)
+        centralized_environment_root(
+            project.as_ref().unwrap().workspace(),
+            python_request.as_ref(),
+            cache,
+        )
     } else {
         path.unwrap_or_else(|| {
             project

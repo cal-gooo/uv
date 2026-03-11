@@ -978,29 +978,15 @@ impl ProjectInterpreter {
 
         // Centralized mode is only active when the venv path is the default (.venv),
         // the preview flag is enabled, and .venv is not already a real directory.
-        //
-        // We can't return early because once we have an interpreter and a path,
-        // we don't know if it exists. And even if it does exist, it could still
-        // be "unusable" for some reason. So we play it safe and just let the
-        // rest of the code handle it as normal.
-        //
-        // TODO(tk): Find some less weird way of achieving this whole thing.
         let (root, is_centralized) = if preview.is_enabled(PreviewFeature::CentralizedEnv)
             && venv_path.is_default()
             && (!venv_path.join("pyvenv.cfg").exists() || fs_err::read_link(&*venv_path).is_ok())
-            && let Ok(installation) = PythonInstallation::find(
-                python_request.as_ref().unwrap_or(&PythonRequest::Default),
-                EnvironmentPreference::OnlySystem,
-                python_preference,
-                None,
-                cache,
-                preview,
-            ) {
+        {
             let centralized =
-                centralized_environment_root(workspace, cache, &installation.into_interpreter());
+                centralized_environment_root(workspace, python_request.as_ref(), cache);
             (centralized, true)
         } else {
-            (venv_path.path().to_path_buf(), false)
+            (venv_path.into_path_buf(), false)
         };
 
         match PythonEnvironment::from_root(&root, cache) {
@@ -1490,7 +1476,11 @@ impl ProjectEnvironment {
                     && (!venv_path.join("pyvenv.cfg").exists()
                         || fs_err::read_link(&*venv_path).is_ok());
                 let root = if centralized {
-                    centralized_environment_root(workspace, cache, &interpreter)
+                    centralized_environment_root(
+                        workspace,
+                        workspace_python.python_request.as_ref(),
+                        cache,
+                    )
                 } else {
                     workspace.venv(active).into_path_buf()
                 };

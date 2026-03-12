@@ -1917,7 +1917,7 @@ async fn run(mut cli: Cli) -> Result<ExitStatus> {
                     args.python,
                     args.install_mirrors,
                     args.settings,
-                    client_builder.subcommand(vec!["lock".to_owned()]),
+                    client_builder.subcommand(vec!["workspace metadata".to_owned()]),
                     globals.python_preference,
                     globals.python_downloads,
                     globals.concurrency,

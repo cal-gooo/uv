@@ -231,15 +231,7 @@ pub(crate) fn resolve_preview(
 
     // Fall back to workspace config
     workspace
-        .and_then(|workspace| {
-            workspace.globals.preview.map(Preview::from).or_else(|| {
-                workspace
-                    .globals
-                    .preview_features
-                    .as_ref()
-                    .map(Preview::from_iter)
-            })
-        })
+        .and_then(|w| w.globals.preview.as_ref().map(Preview::from))
         .unwrap_or_default()
 }
 
